@@ -5,6 +5,14 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/api/user/:path*",
+      "destination": "/api/node-gateway?service=user&route=:path*"
+    },
+    {
+      "source": "/api/payment/:path*",
+      "destination": "/api/node-gateway?service=payment&route=:path*"
+    },
+    {
       "source": "/api/enrollment/:path*",
       "destination": "https://enrollment-service-production-60640b11.up.railway.app/:path*"
     },

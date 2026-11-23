@@ -7,7 +7,7 @@ function statusTone(status) {
   return 'ok'
 }
 
-const SHORT = { enrollment: 'Enrollment', attendance: 'Attendance' }
+const SHORT = { user: 'User', payment: 'Payment', enrollment: 'Enrollment', attendance: 'Attendance' }
 
 export default function CommunicationLog() {
   const log = useCommunicationLog()
@@ -41,8 +41,10 @@ export default function CommunicationLog() {
             {e.upstream.map((u, i) => (
               <div key={i} className="log-upstream">
                 <span className="arrow">↳</span>
-                <span className="svc svc-attendance">Attendance</span>→
-                <span className="svc svc-enrollment">Enrollment</span>
+                <span className={`svc svc-${e.service}`}>{SHORT[e.service]}</span>→
+                <span className={`svc svc-${(u.service || '').replace(/-service$/, '')}`}>
+                  {SHORT[(u.service || '').replace(/-service$/, '')] || u.service}
+                </span>
                 <code>
                   {u.method} {u.path}
                 </code>

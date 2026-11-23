@@ -279,3 +279,10 @@ td select { min-width: 120px; }
 .status-warn { color: var(--warn); }
 .status-error { color: var(--error); }
 @keyframes fade-in { from { background: var(--primary-soft); } to { background: transparent; } }
+
+.card fieldset.form-grid {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
