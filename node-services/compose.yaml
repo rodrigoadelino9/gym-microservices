@@ -1,0 +1,41 @@
+services:
+  mysql-node:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: local_root_only
+    volumes:
+      - node-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/01-databases.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 3s
+      timeout: 5s
+      retries: 30
+
+  user-service:
+    build: .
+    command: ["node", "user-service/index.js"]
+    ports: ["8003:8003"]
+    environment:
+      DB_HOST: mysql-node
+      DB_USER: gym_user
+      DB_PASSWORD: local_user_only
+    depends_on:
+      mysql-node:
+        condition: service_healthy
+
+  payment-service:
+    build: .
+    command: ["node", "payment-service/index.js"]
+    ports: ["8004:8004"]
+    environment:
+      DB_HOST: mysql-node
+      DB_USER: gym_payment
+      DB_PASSWORD: local_payment_only
+      USER_SERVICE_URL: http://user-service:8003
+    depends_on:
+      mysql-node:
+        condition: service_healthy
+
+volumes:
+  node-data:
